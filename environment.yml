@@ -9,6 +9,8 @@ dependencies:
   - cloudpickle
   - pandas
   - matplotlib
+  - jupyter
+  - shap
   - pip:
     - ramp-workflow
     - holidays

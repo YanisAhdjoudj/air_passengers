@@ -4,6 +4,8 @@ scikit-learn>=0.22
 joblib
 cloudpickle
 pandas
+jupyter
+shap
 matplotlib
 holidays
 geopy

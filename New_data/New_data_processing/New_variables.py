@@ -9,7 +9,7 @@ Created on Sun Feb  7 21:10:36 2021
 import os
 import pandas as pd
 import numpy as np
-os.chdir("C:\\Users\\yanis\\01 Projets\\01 Python Projects\\Projet_Air_Passenger\\air_passengers-master\\New_data")
+os.chdir(r"C:\\Users\\yanis\\01 Projets\\01 Python Projects\\Projet_Air_Passenger\\air_passengers-master\\New_data")
 
 
 # American airline stocks
@@ -55,5 +55,36 @@ Fuel_Prices=Date.merge(Fuel_Prices,on="date",how="left")
 
 Fuel_Prices=fullfil_date(Fuel_Prices,"prix")
 
-Fuel_Prices.to_csv(r"C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers-master\New_data\New_data_cleaned\Fuel_Prices.csv")
-AAL_stocks.to_csv(r"C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers-master\New_data\New_data_cleaned\AAL_Stocks.csv")
+Fuel_Prices=pd.read_csv(r"C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers\New_data\New_data_cleaned\Fuel_Prices.csv",index_col=0)
+AAL_stocks=pd.read_csv(r"C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers\New_data\New_data_cleaned\AAL_Stocks.csv",index_col=0)
+Fuel_Prices.rename(columns={"date": "Date"},inplace=True)
+
+
+External_Data=AAL_stocks.merge(Fuel_Prices,on="Date",how="left")
+test_merge.to_csv(r"C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers\New_data\New_data_cleaned\FULL.csv")
+
+
+#meteo data
+meteo_data=pd.read_csv(r"C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers\New_data\New_data_cleaned\external_data.csv", parse_dates=["Date"])
+meteo_data["Pluie"]=meteo_data.apply(lambda x: 0 if pd.isnull(x['Events']) else 1, axis=1)
+
+
+data_airport = pd.read_csv(r'C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers\submissions\Test_1\airport_key.csv',index_col=0)
+
+external_data=pd.read_csv(r'C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers\New_data\New_data_cleaned\External_Data_2.csv',index_col=0)
+external_data.loc[:, 'Date'] = pd.to_datetime(external_data.loc[:, 'Date'])
+test=external_data.merge(meteo_data,on="Date",how="left")
+
+test2.rename(columns={"Aeroport":"AirPort"},inplace=True)
+test2=test.merge(data_airport,on="Aeroport",how="inner")
+external_data=test.merge(meteo_data,on="Date",how="left")
+
+
+external_data=pd.read_csv(r'C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers\New_data\New_data_cleaned\external_data_i.csv',index_col=0)
+testplus=external_data[["Date","AirPort","Dernier","is_holiday","scheduled_service"]]
+testplus.loc[:, 'Date'] = pd.to_datetime(testplus.loc[:, 'Date'])
+external_data.info()
+test4.rename(columns={"Date":"DateofDeparture"},inplace=True)
+test4=testplus.merge(test2,on=["Date","AirPort"],how="left")
+
+test4.to_csv(r"C:\Users\yanis\01 Projets\01 Python Projects\Projet_Air_Passenger\air_passengers\New_data\New_data_cleaned\External_Data_Full.csv")
